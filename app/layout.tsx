@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import ThemeToggle from "@/components/ThemeToggle";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -10,6 +11,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t}catch(e){}",
+          }}
+        />
+      </head>
       <body>
         <header className="site-header">
           <Link className="brand" href="/" aria-label="Sai's Learning Log home">
@@ -19,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <nav className="top-nav" aria-label="Primary navigation">
             <Link href="/">Opening</Link>
             <Link href="/posts">Posts</Link>
+            <ThemeToggle />
           </nav>
         </header>
         {children}

@@ -1,6 +1,8 @@
 :root {
   color-scheme: dark;
   --bg: #050706;
+  --bg-start: #030403;
+  --bg-end: #020302;
   --panel: rgba(12, 18, 15, 0.88);
   --panel-strong: #101812;
   --line: rgba(141, 196, 159, 0.22);
@@ -9,7 +11,35 @@
   --amber: #f2c46d;
   --text: #f4f7f1;
   --muted: #a9b9ad;
+  --header-bg: rgba(4, 7, 5, 0.86);
+  --field-bg: rgba(5, 10, 7, 0.78);
+  --hero-scrim: rgba(5, 7, 6, 0.97);
+  --hero-scrim-soft: rgba(5, 7, 6, 0.8);
+  --hero-scrim-clear: rgba(5, 7, 6, 0.36);
+  --strip-bg: #080d09;
   --shadow: 0 24px 90px rgba(0, 0, 0, 0.42);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f7faf5;
+  --bg-start: #ffffff;
+  --bg-end: #edf4ed;
+  --panel: rgba(255, 255, 255, 0.9);
+  --panel-strong: #ffffff;
+  --line: rgba(31, 111, 67, 0.18);
+  --green: #167a45;
+  --green-soft: #0f5f35;
+  --amber: #9a6617;
+  --text: #101610;
+  --muted: #58695d;
+  --header-bg: rgba(255, 255, 255, 0.86);
+  --field-bg: rgba(255, 255, 255, 0.92);
+  --hero-scrim: rgba(247, 250, 245, 0.97);
+  --hero-scrim-soft: rgba(247, 250, 245, 0.82);
+  --hero-scrim-clear: rgba(247, 250, 245, 0.46);
+  --strip-bg: #edf4ed;
+  --shadow: 0 24px 80px rgba(26, 47, 34, 0.14);
 }
 
 * {
@@ -26,7 +56,7 @@ body {
   background:
     radial-gradient(circle at 78% 12%, rgba(87, 217, 130, 0.1), transparent 30rem),
     radial-gradient(circle at 10% 90%, rgba(242, 196, 109, 0.07), transparent 24rem),
-    linear-gradient(180deg, #030403 0%, var(--bg) 46%, #020302 100%);
+    linear-gradient(180deg, var(--bg-start) 0%, var(--bg) 46%, var(--bg-end) 100%);
   color: var(--text);
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   letter-spacing: 0;
@@ -47,7 +77,7 @@ a {
   gap: 1rem;
   padding: 1rem clamp(1rem, 4vw, 4rem);
   border-bottom: 1px solid var(--line);
-  background: rgba(4, 7, 5, 0.86);
+  background: var(--header-bg);
   backdrop-filter: blur(18px);
 }
 
@@ -80,6 +110,18 @@ a {
   padding: 0.65rem 0.9rem;
   color: var(--muted);
   font-weight: 700;
+}
+
+.theme-toggle {
+  min-height: 2.5rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--field-bg);
+  color: var(--green-soft);
+  font: inherit;
+  font-weight: 800;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
 }
 
 .top-nav a:hover {
@@ -117,7 +159,7 @@ a {
   z-index: -1;
   content: "";
   background:
-    linear-gradient(90deg, rgba(5, 7, 6, 0.97) 0%, rgba(5, 7, 6, 0.8) 48%, rgba(5, 7, 6, 0.36) 100%),
+    linear-gradient(90deg, var(--hero-scrim) 0%, var(--hero-scrim-soft) 48%, var(--hero-scrim-clear) 100%),
     linear-gradient(180deg, transparent 78%, var(--bg) 100%);
 }
 
@@ -215,7 +257,7 @@ p {
 }
 
 .button.ghost {
-  background: rgba(5, 17, 10, 0.8);
+  background: var(--field-bg);
   color: var(--green-soft);
 }
 
@@ -223,7 +265,7 @@ p {
   align-self: end;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(5, 10, 7, 0.76);
+  background: var(--field-bg);
   box-shadow: var(--shadow);
   overflow: hidden;
 }
@@ -272,7 +314,7 @@ pre {
 
 .intro-strip {
   border-block: 1px solid var(--line);
-  background: #080d09;
+  background: var(--strip-bg);
 }
 
 .section-heading {
@@ -374,7 +416,7 @@ pre {
   background:
     linear-gradient(135deg, rgba(87, 217, 130, 0.1), transparent 28rem),
     linear-gradient(90deg, rgba(242, 196, 109, 0.06), transparent 22rem),
-    #050706;
+    var(--bg);
 }
 
 .posts-hero h1 {
@@ -421,7 +463,7 @@ pre {
   min-height: 2.9rem;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(5, 10, 7, 0.78);
+  background: var(--field-bg);
   color: var(--text);
   font: inherit;
   padding: 0.75rem 0.85rem;
@@ -451,7 +493,7 @@ pre {
   min-height: 2.75rem;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(5, 10, 7, 0.68);
+  background: var(--field-bg);
   color: var(--muted);
   font: inherit;
   font-weight: 800;
@@ -509,7 +551,7 @@ pre {
 .empty-state {
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(8, 24, 15, 0.54);
+  background: var(--panel);
   color: var(--muted);
   padding: 1.25rem;
 }
