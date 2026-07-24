@@ -1,6 +1,8 @@
 import PostsBrowser from "@/components/PostsBrowser";
 import { getPosts } from "@/lib/posts";
 
+export const dynamic = "force-dynamic";
+
 export default async function PostsPage() {
   const posts = await getPosts();
 
