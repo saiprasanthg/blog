@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 import { topicLabels, type Topic } from "@/lib/types";
 
@@ -8,6 +9,8 @@ export default function AdminEditor() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isAuthed, setIsAuthed] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [publishedSlug, setPublishedSlug] = useState("");
   const [status, setStatus] = useState("");
   const [topic, setTopic] = useState<Topic>("system-design");
 
@@ -44,6 +47,7 @@ export default function AdminEditor() {
   async function handlePublish(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setStatus("");
+    setPublishedSlug("");
 
     if (!supabase) {
       setStatus("Supabase is not configured yet.");
@@ -66,27 +70,34 @@ export default function AdminEditor() {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
 
+    setIsPublishing(true);
     const { error } = await supabase.from("posts").insert({
-        title,
-        slug,
-        topic,
-        category: topicLabels[topic],
-        read_time: readTime,
-        summary,
-        content,
-        tags,
-        search: `${title} ${summary} ${tags.join(" ")} ${search}`,
-        published: true,
+      title,
+      slug,
+      topic,
+      category: topicLabels[topic],
+      read_time: readTime,
+      summary,
+      content,
+      tags,
+      search: `${title} ${summary} ${tags.join(" ")} ${search}`,
+      published: true,
     });
+    setIsPublishing(false);
 
     if (error) {
-      setStatus(error.message);
+      if (error.message.includes("posts_slug_key")) {
+        setStatus("A post with this title already exists. Change the title slightly and publish again.");
+      } else {
+        setStatus(error.message);
+      }
       return;
     }
 
     event.currentTarget.reset();
     setTopic("system-design");
-    setStatus("Published. Open Posts to see the new note.");
+    setPublishedSlug(slug);
+    setStatus("Published successfully.");
   }
 
   return (
@@ -117,6 +128,20 @@ export default function AdminEditor() {
       ) : (
         <form className="admin-card" onSubmit={handlePublish}>
           <h2>New post</h2>
+          {publishedSlug ? (
+            <div className="publish-success" role="status">
+              <strong>Published successfully</strong>
+              <p>Your post is live now. You can view it or keep writing another note.</p>
+              <div className="success-actions">
+                <Link className="button primary" href={`/posts/${publishedSlug}`}>
+                  View post
+                </Link>
+                <Link className="button ghost" href="/posts">
+                  All posts
+                </Link>
+              </div>
+            </div>
+          ) : null}
           <label>
             <span>Title</span>
             <input name="title" type="text" placeholder="Designing Rate Limiting" required />
@@ -150,8 +175,8 @@ export default function AdminEditor() {
             <span>Search keywords</span>
             <input name="search" type="text" placeholder="rate limiting token bucket redis api system design" />
           </label>
-          <button className="button primary" type="submit">
-            Publish
+          <button className="button primary" type="submit" disabled={isPublishing}>
+            {isPublishing ? "Publishing..." : "Publish"}
           </button>
           <p className="form-note">{status}</p>
         </form>
